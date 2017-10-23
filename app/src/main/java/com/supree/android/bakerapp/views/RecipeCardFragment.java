@@ -1,6 +1,7 @@
-package com.supree.android.bakerapp.ui;
+package com.supree.android.bakerapp.views;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecipeCardFragment extends Fragment {
+public class RecipeCardFragment extends Fragment implements RecipeListAdapter.ListItemClickListener {
 
     private static final String LOG_TAG = RecipeCardFragment.class.getSimpleName();
 
@@ -37,9 +38,7 @@ public class RecipeCardFragment extends Fragment {
     private List<Recipe> recipeList;
     private RecipeListAdapter mAdapter;
 
-    public RecipeCardFragment() {
-
-    }
+    public RecipeCardFragment() {}
 
     @Nullable
     @Override
@@ -58,12 +57,12 @@ public class RecipeCardFragment extends Fragment {
             rvRecipe.setLayoutManager(mLayoutManager);
 //        }
 
-        mAdapter = new RecipeListAdapter(recipeList);
+        mAdapter = new RecipeListAdapter(recipeList,this);
         rvRecipe.setAdapter(mAdapter);
 
         fetchRecipes();
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return rootView;
     }
 
     private void fetchRecipes(){
@@ -73,11 +72,8 @@ public class RecipeCardFragment extends Fragment {
         call.enqueue(new Callback<ArrayList<Recipe>>() {
             @Override
             public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
-                Log.d(LOG_TAG, "Receipes size " + response.body().size());
                 recipeList.clear();
                 recipeList.addAll(response.body());
-
-                Log.d("LONGG", "SIXIXIXIXI " + recipeList.size());
 
                 mAdapter.notifyDataSetChanged();
             }
@@ -93,5 +89,14 @@ public class RecipeCardFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Recipe recipe = recipeList.get(clickedItemIndex);
+
+        Intent intent = new Intent(getContext(), RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailFragment.SELECTED_RECIPE,recipe);
+        startActivity(intent);
     }
 }

@@ -3,4 +3,8 @@
 
     <string name="app_name">BakerApp</string>
     <string name="action_settings">Settings</string>
+
+    <!--Fragment Recipe Detail-->
+    <string name="recipe_ingredients">Recipe Ingredients</string>
+
 </resources>
