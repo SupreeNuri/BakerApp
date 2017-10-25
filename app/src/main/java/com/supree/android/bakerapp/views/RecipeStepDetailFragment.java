@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.supree.android.bakerapp.R;
+import com.supree.android.bakerapp.models.Step;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +37,8 @@ public class RecipeStepDetailFragment extends Fragment {
 
     SimpleExoPlayer mExoPlayer;
 
+    private Step selectedStep;
+
     private Unbinder unbinder;
 
     @Nullable
@@ -45,6 +48,13 @@ public class RecipeStepDetailFragment extends Fragment {
         unbinder = ButterKnife.bind(this, rootView);
 
         //Step step = getActivity().getIntent().getParcelableExtra(SELECTED_STEP);
+
+        if(savedInstanceState == null) {
+            selectedStep = getArguments().getParcelable(SELECTED_STEP);
+        }
+        else {
+            //selectedStep = savedInstanceState.getParcelable(SELECTED_RECIPES);
+        }
 
         //initializePlayer(Uri.parse(step.getVideoURL()));
 

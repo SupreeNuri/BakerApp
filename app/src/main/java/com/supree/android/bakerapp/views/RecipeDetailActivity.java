@@ -1,15 +1,23 @@
 package com.supree.android.bakerapp.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
 import com.supree.android.bakerapp.R;
+import com.supree.android.bakerapp.models.Recipe;
+import com.supree.android.bakerapp.models.Step;
 
 import static com.supree.android.bakerapp.share.Constants.TITLE;
+import static com.supree.android.bakerapp.views.RecipeStepDetailFragment.SELECTED_STEP;
 
-public class RecipeDetailActivity extends BaseActivity implements RecipeDetailFragment.OnMediaChangeListener {
+public class RecipeDetailActivity extends BaseActivity implements RecipeDetailFragment.OnRecipeItemSelectedListener {
 
     private boolean mTwoPane;
+
+    private Recipe selectedRecipe;
+
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +26,11 @@ public class RecipeDetailActivity extends BaseActivity implements RecipeDetailFr
 
         setupToolbar();
 
+        selectedRecipe = getIntent().getParcelableExtra(RecipeDetailFragment.SELECTED_RECIPE);
+
         if(savedInstanceState == null){
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager = getSupportFragmentManager();
 
             RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
             fragmentManager.beginTransaction()
@@ -31,14 +41,16 @@ public class RecipeDetailActivity extends BaseActivity implements RecipeDetailFr
                 mTwoPane = true;
 
                 RecipeStepDetailFragment recipeStepDetailFragment = new RecipeStepDetailFragment();
+                Bundle stepBundle = new Bundle();
+                stepBundle.putParcelable(SELECTED_STEP, selectedRecipe.getSteps().get(0));
+                recipeStepDetailFragment.setArguments(stepBundle);
+
                 fragmentManager.beginTransaction()
                         .add(R.id.recipe_detail_step_fragment, recipeStepDetailFragment)
                         .commit();
             }else{
                 mTwoPane = false;
             }
-        }else{
-
         }
     }
 
@@ -50,14 +62,24 @@ public class RecipeDetailActivity extends BaseActivity implements RecipeDetailFr
     }
 
     @Override
-    public void OnMediaChanged(int position) {
-        Bundle b = new Bundle();
-        b.putInt("clickedIndex", position);
+    public void OnRecipeItemSelected(int position) {
+        Step selectedStep = selectedRecipe.getSteps().get(position);
 
         if(mTwoPane){
+            final RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
+
+            Bundle stepBundle = new Bundle();
+            stepBundle.putParcelable(SELECTED_STEP, selectedStep);
+            fragment.setArguments(stepBundle);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.recipe_detail_step_fragment, fragment)
+                    .commit();
 
         }else{
-
+            Intent intent = new Intent(this, RecipeStepDetailActivity.class);
+            intent.putExtra(SELECTED_STEP, selectedStep);
+            startActivity(intent);
         }
     }
 }

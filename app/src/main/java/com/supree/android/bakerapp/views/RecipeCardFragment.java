@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.supree.android.bakerapp.R;
 import com.supree.android.bakerapp.adapter.RecipeListAdapter;
@@ -34,10 +35,15 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
 
     private static final String LOG_TAG = RecipeCardFragment.class.getSimpleName();
 
-    @BindView(R.id.rvRecipe) RecyclerView rvRecipe;
-    Unbinder unbinder;
+    private static final String EXTRA_KEY = "recipe";
 
-    private List<Recipe> recipeList;
+    @BindView(R.id.rvRecipe)
+    RecyclerView rvRecipe;
+    Unbinder unbinder;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
+    private ArrayList<Recipe> recipeList;
     private RecipeListAdapter mAdapter;
 
     public RecipeCardFragment() {}
@@ -48,32 +54,43 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
         View rootView = inflater.inflate(R.layout.fragment_recipe_card, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
+        Log.d("LONGG", "Tag iss  " + rootView.getTag());
+
         recipeList = new ArrayList<>();
 
-        if (rootView.getTag()!=null && rootView.getTag().equals("phone-land")){
-            GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(),4);
+        if (rootView.getTag() != null && rootView.getTag().equals("tablet")) {
+            GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
             rvRecipe.setLayoutManager(mLayoutManager);
-        }
-        else {
+        } else {
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             rvRecipe.setLayoutManager(mLayoutManager);
         }
 
-        mAdapter = new RecipeListAdapter(recipeList,this);
+        mAdapter = new RecipeListAdapter(recipeList, this);
         rvRecipe.setAdapter(mAdapter);
 
-        fetchRecipes();
+        if (savedInstanceState == null) {
+            fetchRecipes();
+        } else if (savedInstanceState.containsKey(EXTRA_KEY)) {
+            List<Recipe> recipes = savedInstanceState.getParcelableArrayList(EXTRA_KEY);
+            recipeList.addAll(recipes);
+            mAdapter.notifyDataSetChanged();
+        }
 
         return rootView;
     }
 
     private void fetchRecipes() {
+        progressBar.setVisibility(View.VISIBLE);
+
         BakerAppAPI bakerAppAPI = BakerAppService.getRecipeAPI();
         Call<ArrayList<Recipe>> call = bakerAppAPI.getRecipes();
 
         call.enqueue(new Callback<ArrayList<Recipe>>() {
             @Override
             public void onResponse(Call<ArrayList<Recipe>> call, Response<ArrayList<Recipe>> response) {
+                progressBar.setVisibility(View.GONE);
+
                 recipeList.clear();
                 recipeList.addAll(response.body());
 
@@ -82,9 +99,17 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
 
             @Override
             public void onFailure(Call<ArrayList<Recipe>> call, Throwable t) {
-                Log.d(LOG_TAG,t.getMessage());
+                Log.d(LOG_TAG, t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (recipeList != null && !recipeList.isEmpty()) {
+            outState.putParcelableArrayList(EXTRA_KEY, recipeList);
+        }
     }
 
     @Override
@@ -98,8 +123,8 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
         Recipe recipe = recipeList.get(clickedItemIndex);
 
         Intent intent = new Intent(getContext(), RecipeDetailActivity.class);
-        intent.putExtra(Constants.TITLE,recipe.getName());
-        intent.putExtra(RecipeDetailFragment.SELECTED_RECIPE,recipe);
+        intent.putExtra(Constants.TITLE, recipe.getName());
+        intent.putExtra(RecipeDetailFragment.SELECTED_RECIPE, recipe);
         startActivity(intent);
     }
 }

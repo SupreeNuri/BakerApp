@@ -2,7 +2,6 @@ package com.supree.android.bakerapp.views;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,10 +28,10 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepAdapter.
 
     public static final String SELECTED_RECIPE = "selected_recipe";
 
-    OnMediaChangeListener mCallback;
+    OnRecipeItemSelectedListener mCallback;
 
-    public interface OnMediaChangeListener{
-        void OnMediaChanged(int position);
+    public interface OnRecipeItemSelectedListener {
+        void OnRecipeItemSelected(int position);
     }
 
     @BindView(R.id.tvRecipeIngredients)
@@ -50,10 +49,10 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepAdapter.
         super.onAttach(context);
 
         try{
-            mCallback = (OnMediaChangeListener) context;
+            mCallback = (OnRecipeItemSelectedListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString()
-                    + " must implement OnMediaChangeListener");
+                    + " must implement OnRecipeItemSelectedListener");
         }
     }
 
@@ -67,14 +66,8 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepAdapter.
         Recipe recipe = getActivity().getIntent().getParcelableExtra(RecipeDetailFragment.SELECTED_RECIPE);
         stepList.addAll(recipe.getSteps());
 
-//        if (rootView.getTag()!=null && rootView.getTag().equals("phone-land")){
-//            GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(),4);
-//            rvRecipe.setLayoutManager(mLayoutManager);
-//        }
-//        else {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvStepList.setLayoutManager(mLayoutManager);
-//        }
 
         mAdapter = new RecipeStepAdapter(stepList,this);
         rvStepList.setAdapter(mAdapter);
@@ -95,10 +88,6 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepAdapter.
     public void onListItemClick(int clickedItemIndex) {
         Step selectedStep = stepList.get(clickedItemIndex);
 
-        mCallback.OnMediaChanged(clickedItemIndex);
-
-        Intent intent = new Intent(getContext(), RecipeStepDetailActivity.class);
-        intent.putExtra(RecipeStepDetailFragment.SELECTED_STEP,selectedStep);
-        startActivity(intent);
+        mCallback.OnRecipeItemSelected(clickedItemIndex);
     }
 }
