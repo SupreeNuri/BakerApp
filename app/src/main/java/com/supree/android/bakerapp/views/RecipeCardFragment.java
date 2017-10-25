@@ -37,11 +37,9 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
 
     private static final String EXTRA_KEY = "recipe";
 
-    @BindView(R.id.rvRecipe)
-    RecyclerView rvRecipe;
+    @BindView(R.id.rvRecipe) RecyclerView rvRecipe;
+    @BindView(R.id.progressBar) ProgressBar progressBar;
     Unbinder unbinder;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
 
     private ArrayList<Recipe> recipeList;
     private RecipeListAdapter mAdapter;
@@ -53,8 +51,6 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recipe_card, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-
-        Log.d("LONGG", "Tag iss  " + rootView.getTag());
 
         recipeList = new ArrayList<>();
 

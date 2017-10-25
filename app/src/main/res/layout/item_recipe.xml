@@ -8,14 +8,16 @@
 
     <TextView
         android:id="@+id/tvRecipeName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:layout_marginBottom="@dimen/global_margin"
         android:layout_marginLeft="@dimen/global_margin_small"
         android:layout_marginRight="@dimen/global_margin_small"
         android:layout_marginTop="@dimen/global_margin"
         android:textColor="@android:color/black"
         android:textSize="@dimen/text_large"
+        android:gravity="center"
+        android:background="@drawable/circular_black_border"
         tools:text="Simple Cake"
         android:text=""/>
 
