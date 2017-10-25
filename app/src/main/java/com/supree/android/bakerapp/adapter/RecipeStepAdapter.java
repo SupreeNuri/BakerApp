@@ -14,9 +14,15 @@ import java.util.List;
 public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.RecipeStepAdapterViewHolder> {
 
     private List<Step> steps;
+    final private ListItemClickListener mOnClickListener;
 
-    public RecipeStepAdapter(List<Step> steps) {
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
+    }
+
+    public RecipeStepAdapter(List<Step> steps, ListItemClickListener listener) {
         this.steps = steps;
+        this.mOnClickListener = listener;
     }
 
     @Override
@@ -56,6 +62,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         @Override
         public void onClick(View v) {
             int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListItemClick(clickedPosition);
         }
     }
 }

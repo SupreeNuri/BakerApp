@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.supree.android.bakerapp.adapter.RecipeListAdapter;
 import com.supree.android.bakerapp.api.BakerAppAPI;
 import com.supree.android.bakerapp.api.BakerAppService;
 import com.supree.android.bakerapp.models.Recipe;
+import com.supree.android.bakerapp.share.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,14 +50,14 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
 
         recipeList = new ArrayList<>();
 
-//        if (rootView.getTag()!=null && rootView.getTag().equals("phone-land")){
-//            GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(),4);
-//            rvRecipe.setLayoutManager(mLayoutManager);
-//        }
-//        else {
+        if (rootView.getTag()!=null && rootView.getTag().equals("phone-land")){
+            GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(),4);
+            rvRecipe.setLayoutManager(mLayoutManager);
+        }
+        else {
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             rvRecipe.setLayoutManager(mLayoutManager);
-//        }
+        }
 
         mAdapter = new RecipeListAdapter(recipeList,this);
         rvRecipe.setAdapter(mAdapter);
@@ -65,7 +67,7 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
         return rootView;
     }
 
-    private void fetchRecipes(){
+    private void fetchRecipes() {
         BakerAppAPI bakerAppAPI = BakerAppService.getRecipeAPI();
         Call<ArrayList<Recipe>> call = bakerAppAPI.getRecipes();
 
@@ -96,6 +98,7 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
         Recipe recipe = recipeList.get(clickedItemIndex);
 
         Intent intent = new Intent(getContext(), RecipeDetailActivity.class);
+        intent.putExtra(Constants.TITLE,recipe.getName());
         intent.putExtra(RecipeDetailFragment.SELECTED_RECIPE,recipe);
         startActivity(intent);
     }

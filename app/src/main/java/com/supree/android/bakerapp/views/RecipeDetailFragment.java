@@ -1,6 +1,8 @@
 package com.supree.android.bakerapp.views;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,9 +25,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class RecipeDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment implements RecipeStepAdapter.ListItemClickListener {
 
     public static final String SELECTED_RECIPE = "selected_recipe";
+
+    OnMediaChangeListener mCallback;
+
+    public interface OnMediaChangeListener{
+        void OnMediaChanged(int position);
+    }
 
     @BindView(R.id.tvRecipeIngredients)
     TextView tvRecipeIngredients;
@@ -36,6 +44,18 @@ public class RecipeDetailFragment extends Fragment {
 
     private ArrayList<Step> stepList;
     private RecipeStepAdapter mAdapter;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (OnMediaChangeListener) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString()
+                    + " must implement OnMediaChangeListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -56,21 +76,29 @@ public class RecipeDetailFragment extends Fragment {
         rvStepList.setLayoutManager(mLayoutManager);
 //        }
 
-        mAdapter = new RecipeStepAdapter(stepList);
+        mAdapter = new RecipeStepAdapter(stepList,this);
         rvStepList.setAdapter(mAdapter);
-
 
         return rootView;
     }
 
     @OnClick(R.id.tvRecipeIngredients)
-    public void showIngredientList() {
-
-    }
+    public void showIngredientList() {}
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Step selectedStep = stepList.get(clickedItemIndex);
+
+        mCallback.OnMediaChanged(clickedItemIndex);
+
+        Intent intent = new Intent(getContext(), RecipeStepDetailActivity.class);
+        intent.putExtra(RecipeStepDetailFragment.SELECTED_STEP,selectedStep);
+        startActivity(intent);
     }
 }

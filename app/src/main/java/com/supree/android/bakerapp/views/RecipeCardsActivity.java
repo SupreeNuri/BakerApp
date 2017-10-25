@@ -6,18 +6,21 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.supree.android.bakerapp.R;
 
+import butterknife.ButterKnife;
+
 public class RecipeCardsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_cards);
+        ButterKnife.bind(this);
 
         RecipeCardFragment recipeCardFragment = new RecipeCardFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .add(R.id.fragment_container,recipeCardFragment)
+                .add(R.id.fragment_container, recipeCardFragment)
                 .commit();
     }
 }
