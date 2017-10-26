@@ -86,8 +86,6 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepAdapter.
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        Step selectedStep = stepList.get(clickedItemIndex);
-
         mCallback.OnRecipeItemSelected(clickedItemIndex);
     }
 }

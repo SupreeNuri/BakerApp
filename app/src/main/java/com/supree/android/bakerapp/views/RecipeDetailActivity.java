@@ -13,7 +13,7 @@ import static com.supree.android.bakerapp.views.RecipeStepDetailFragment.SELECTE
 
 public class RecipeDetailActivity extends BaseActivity implements RecipeDetailFragment.OnRecipeItemSelectedListener {
 
-    private boolean mTwoPane;
+    private static boolean mTwoPane;
 
     private Recipe selectedRecipe;
 
@@ -28,9 +28,9 @@ public class RecipeDetailActivity extends BaseActivity implements RecipeDetailFr
 
         selectedRecipe = getIntent().getParcelableExtra(RecipeDetailFragment.SELECTED_RECIPE);
 
-        if(savedInstanceState == null){
+        fragmentManager = getSupportFragmentManager();
 
-            fragmentManager = getSupportFragmentManager();
+        if(savedInstanceState == null){
 
             RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
             fragmentManager.beginTransaction()

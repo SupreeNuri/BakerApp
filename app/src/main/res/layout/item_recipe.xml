@@ -18,7 +18,6 @@
         android:textSize="@dimen/text_large"
         android:gravity="center"
         android:background="@drawable/circular_black_border"
-        tools:text="Simple Cake"
-        android:text=""/>
+        tools:text="Simple Cake" />
 
 </LinearLayout>

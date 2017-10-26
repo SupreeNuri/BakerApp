@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/global_margin"
+    android:background="@drawable/circular_black_border"
+    android:gravity="center"
+    android:paddingTop="@dimen/global_margin"
+    android:paddingBottom="@dimen/global_margin">
 
     <TextView
         android:id="@+id/tvStepNumber"

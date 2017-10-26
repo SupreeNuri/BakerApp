@@ -56,7 +56,7 @@ public class RecipeStepDetailFragment extends Fragment {
             //selectedStep = savedInstanceState.getParcelable(SELECTED_RECIPES);
         }
 
-        //initializePlayer(Uri.parse(step.getVideoURL()));
+        initializePlayer(Uri.parse(selectedStep.getVideoURL()));
 
         return rootView;
     }
@@ -77,9 +77,9 @@ public class RecipeStepDetailFragment extends Fragment {
     }
 
     private void releasePlayer(){
-//        mExoPlayer.stop();
-//        mExoPlayer.release();
-//        mExoPlayer = null;
+        mExoPlayer.stop();
+        mExoPlayer.release();
+        mExoPlayer = null;
     }
 
     @Override

@@ -7,4 +7,8 @@
     <!--Fragment Recipe Detail-->
     <string name="recipe_ingredients">Recipe Ingredients</string>
 
+    <!--Fragment Recipe Step Detail-->
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+
 </resources>
