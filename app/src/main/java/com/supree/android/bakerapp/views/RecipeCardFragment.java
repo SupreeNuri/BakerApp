@@ -3,6 +3,7 @@ package com.supree.android.bakerapp.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +19,7 @@ import com.supree.android.bakerapp.R;
 import com.supree.android.bakerapp.adapter.RecipeListAdapter;
 import com.supree.android.bakerapp.api.BakerAppAPI;
 import com.supree.android.bakerapp.api.BakerAppService;
+import com.supree.android.bakerapp.espresso.SimpleIdlingResource;
 import com.supree.android.bakerapp.models.Recipe;
 import com.supree.android.bakerapp.share.Constants;
 
@@ -31,6 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class RecipeCardFragment extends Fragment implements RecipeListAdapter.ListItemClickListener {
 
     private static final String LOG_TAG = RecipeCardFragment.class.getSimpleName();
@@ -43,6 +46,8 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
 
     private ArrayList<Recipe> recipeList;
     private RecipeListAdapter mAdapter;
+
+    @Nullable private SimpleIdlingResource mIdlingResource;
 
     public RecipeCardFragment() {}
 
@@ -79,6 +84,10 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
     private void fetchRecipes() {
         progressBar.setVisibility(View.VISIBLE);
 
+        if(mIdlingResource != null){
+            mIdlingResource.setIdleState(false);
+        }
+
         BakerAppAPI bakerAppAPI = BakerAppService.getRecipeAPI();
         Call<ArrayList<Recipe>> call = bakerAppAPI.getRecipes();
 
@@ -91,6 +100,17 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
                 recipeList.addAll(response.body());
 
                 mAdapter.notifyDataSetChanged();
+
+                if(mIdlingResource != null) {
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mIdlingResource.setIdleState(true);
+                        }
+                    }, 5000);
+                }
             }
 
             @Override
@@ -122,5 +142,12 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
         intent.putExtra(Constants.TITLE, recipe.getName());
         intent.putExtra(RecipeDetailFragment.SELECTED_RECIPE, recipe);
         startActivity(intent);
+    }
+
+    public SimpleIdlingResource getIdlingResource(){
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 }
