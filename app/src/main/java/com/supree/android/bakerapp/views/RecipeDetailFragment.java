@@ -43,6 +43,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeStepAdapter.
 
     private ArrayList<Step> stepList;
     private RecipeStepAdapter mAdapter;
+    private int currentPosition;
 
     @Override
     public void onAttach(Context context) {
