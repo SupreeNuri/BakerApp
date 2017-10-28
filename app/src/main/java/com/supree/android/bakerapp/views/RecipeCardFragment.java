@@ -3,7 +3,6 @@ package com.supree.android.bakerapp.views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -47,8 +46,6 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
     private ArrayList<Recipe> recipeList;
     private RecipeListAdapter mAdapter;
 
-    @Nullable private SimpleIdlingResource mIdlingResource;
-
     public RecipeCardFragment() {}
 
     @Nullable
@@ -84,10 +81,6 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
     private void fetchRecipes() {
         progressBar.setVisibility(View.VISIBLE);
 
-        if(mIdlingResource != null){
-            mIdlingResource.setIdleState(false);
-        }
-
         BakerAppAPI bakerAppAPI = BakerAppService.getRecipeAPI();
         Call<ArrayList<Recipe>> call = bakerAppAPI.getRecipes();
 
@@ -101,15 +94,8 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
 
                 mAdapter.notifyDataSetChanged();
 
-                if(mIdlingResource != null) {
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mIdlingResource.setIdleState(true);
-                        }
-                    }, 5000);
+                if(getIdlingResource() != null) {
+                    getIdlingResource().setIdleState(true);
                 }
             }
 
@@ -144,10 +130,11 @@ public class RecipeCardFragment extends Fragment implements RecipeListAdapter.Li
         startActivity(intent);
     }
 
-    public SimpleIdlingResource getIdlingResource(){
-        if (mIdlingResource == null) {
-            mIdlingResource = new SimpleIdlingResource();
+    private SimpleIdlingResource getIdlingResource(){
+        if(getActivity() != null) {
+            return ((RecipeCardsActivity) getActivity()).mIdlingResource;
+        }else {
+            return null;
         }
-        return mIdlingResource;
     }
 }

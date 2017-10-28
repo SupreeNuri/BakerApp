@@ -2,7 +2,6 @@ package com.supree.android.bakerapp;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingResource;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -38,13 +37,17 @@ public class ViewVideoTests {
     }
 
     @Test
-    public void checkIntent_RecipeDetailActivity() {
+    public void checkCardText_RecipeCardActivity() {
 
-        onView(ViewMatchers.withId(R.id.rvRecipe)).perform(RecyclerViewActions.scrollToPosition(1));
+        onView(ViewMatchers.withId(R.id.fragment_container)).check(matches(isDisplayed()));
+//        onView(ViewMatchers.withId(R.id.rvRecipe)).perform(RecyclerViewActions.scrollToPosition(1));
         onView(withText("Brownies")).check(matches(isDisplayed()));
-        //onView(ViewMatchers.withId(R.id.rvRecipe)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-        //intended(hasComponent(RecipeDetailActivity.class.getName()));
 
+    }
+
+    @Test
+    public void checkVideoView_RecipeDetailActivity(){
+        //onView(ViewMatchers.withId(R.id.recipe_recycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
     }
 
     @After
