@@ -83,8 +83,8 @@ public class RecipeStepDetailFragment extends Fragment {
 
         if (selectedStep.getVideoURL() == null || selectedStep.getVideoURL().isEmpty()) {
             vNoVideo.setVisibility(View.VISIBLE);
-            mPlayerView.setVisibility(View.GONE);
         } else {
+            vNoVideo.setVisibility(View.GONE);
             initializePlayer(Uri.parse(selectedStep.getVideoURL()));
         }
 
