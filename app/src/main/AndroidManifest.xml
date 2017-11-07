@@ -23,7 +23,7 @@
         <activity android:name=".views.RecipeDetailActivity" />
         <activity android:name=".views.RecipeStepDetailActivity" />
 
-        <receiver android:name=".BakingWidgetProvider">
+        <receiver android:name=".widget.BakingWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

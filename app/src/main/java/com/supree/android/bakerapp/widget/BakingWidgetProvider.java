@@ -1,4 +1,4 @@
-package com.supree.android.bakerapp;
+package com.supree.android.bakerapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.supree.android.bakerapp.R;
 import com.supree.android.bakerapp.views.RecipeCardsActivity;
 
 /**
